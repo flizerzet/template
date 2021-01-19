@@ -48,7 +48,8 @@ let path = {
 		html: src_folder + "/**/*.html",
 		js: src_folder + "/**/*.js",
 		css: src_folder + "/scss/**/*.scss",
-		images: src_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}"
+		images: src_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}",
+		libs: src_folder + "/libs/**/*.{css,js}"
 	},
 	clean: "./" + project_name + "/"
 };
@@ -143,6 +144,7 @@ function images() {
 }
 function libs() {
 	return src(path.src.libs)
+		.pipe(newer(path.build.libs))
 		.pipe(dest(path.build.libs));
 }
 function fonts_otf() {
@@ -191,6 +193,7 @@ function watchFiles() {
 	gulp.watch([path.watch.css], css);
 	gulp.watch([path.watch.js], js);
 	gulp.watch([path.watch.images], images);
+	gulp.watch([path.watch.libs], libs);
 }
 let build = gulp.series(clean, fonts_otf, gulp.parallel(html, css, js, libs, images), fonts, gulp.parallel(fontstyle));
 let watch = gulp.parallel(build, watchFiles, browserSync);
